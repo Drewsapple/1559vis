@@ -3,23 +3,30 @@
 	import { Vector3, type BufferGeometry } from 'three';
 	import type { Block } from 'viem';
 
-	let lineBuffer: BufferGeometry | undefined;
-	let lineBuffer2: BufferGeometry | undefined;
+	let minLine: BufferGeometry | undefined;
+	let targetLine: BufferGeometry | undefined;
+	let maxLine: BufferGeometry | undefined;
 
 	export let blocks: Block[];
 
-	$: line = [new Vector3(0, 0, 0), new Vector3(0, 0, -2 * blocks.length)];
+	$: line = [new Vector3(0, 0, 1), new Vector3(0, 0, -2 * blocks.length)];
 
-	$: lineBuffer?.setFromPoints(line);
-	$: lineBuffer2?.setFromPoints(line);
+	$: minLine?.setFromPoints(line);
+	$: targetLine?.setFromPoints(line);
+	$: maxLine?.setFromPoints(line);
 </script>
 
 <T.Line>
 	<T.LineBasicMaterial color="#0059BA" />
-	<T.BufferGeometry bind:ref={lineBuffer} />
+	<T.BufferGeometry bind:ref={minLine} />
 </T.Line>
 
-<T.Line position.x={-1}>
+<T.Line position.x={0.5}>
+	<T.LineBasicMaterial color="#00ff00" />
+	<T.BufferGeometry bind:ref={targetLine} />
+</T.Line>
+
+<T.Line position.x={1}>
 	<T.LineBasicMaterial color="#ff0025" />
-	<T.BufferGeometry bind:ref={lineBuffer2} />
+	<T.BufferGeometry bind:ref={maxLine} />
 </T.Line>

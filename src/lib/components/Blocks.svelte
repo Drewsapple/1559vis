@@ -14,7 +14,7 @@
 	{#each blocks as block, i}
 		<T.Group position.z={-i * 1.5}>
 			<T.Mesh
-				position.x={-Number((block.gasUsed * 1000n) / block.gasLimit) / 1000 / 2}
+				position.x={Number((block.gasUsed * 1000n) / block.gasLimit) / 1000 / 2}
 				position.y={(feeScalar * parseFloat(formatUnits(block.baseFeePerGas ?? 0n, 9))) / 2}
 				position.z={-0.5}
 			>
@@ -25,14 +25,16 @@
 						1
 					]}
 				/>
-				<T.MeshStandardMaterial color="#0059BA" />
+				<T.MeshStandardMaterial color="#5599CA" opacity={0.75} transparent />
 			</T.Mesh>
 			<HTML
 				position.z={-0.5}
-				position.y={feeScalar * parseFloat(formatUnits(block.baseFeePerGas ?? 0n, 9)) + 0.5}
+				position.x={-0.625}
+				position.y={-0.25}
 				scale={0.25}
-				rotation={[0, -Math.PI / 2, 0]}
+				rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
 				transform
+				pointerEvents={'none'}
 			>
 				<div class="flex flex-col items-center justify-center w-full h-full p-2 space-y-2">
 					<div class="text-2xl font-bold text-center">
