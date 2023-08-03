@@ -1,15 +1,12 @@
 <script lang="ts">
 	import { T } from '@threlte/core';
 	import { Vector3, type BufferGeometry } from 'three';
-	import type { Block } from 'viem';
 
 	let minLine: BufferGeometry | undefined;
 	let targetLine: BufferGeometry | undefined;
 	let maxLine: BufferGeometry | undefined;
 
-	export let blocks: Block[];
-
-	$: line = [new Vector3(0, 0, 1), new Vector3(0, 0, -2 * blocks.length)];
+	$: line = [new Vector3(0, 0, -1), new Vector3(0, 0, 0.5)];
 
 	$: minLine?.setFromPoints(line);
 	$: targetLine?.setFromPoints(line);

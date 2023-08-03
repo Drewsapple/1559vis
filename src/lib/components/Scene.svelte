@@ -8,27 +8,48 @@
 	import Blocks from './Blocks.svelte';
 	import Camera from './Camera.svelte';
 
-	const blocks = writable<Block[]>([]);
+	const percentiles = [
+		5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95
+	] as const;
+
+	const blocks = writable<
+		(Block & {
+			rewards: bigint[];
+		})[]
+	>([]);
 
 	onMount(() => {
-		return client.watchBlocks({
+		const stopWatching = client.watchBlocks({
 			emitOnBegin: true,
 			emitMissed: true,
-			onBlock: (block) => {
-				console.log(block);
+			onBlock: async (block) => {
+				const fullBlockPromise = client.getBlock({ blockHash: block.hash });
+				const feeHistoryPromise = client.getFeeHistory({
+					blockNumber: block.number!,
+					blockCount: 1,
+					rewardPercentiles: [...percentiles]
+				});
+
+				const [fullBlock, feeHistory] = await Promise.all([fullBlockPromise, feeHistoryPromise]);
+				const rewards = feeHistory.reward![0];
 				blocks.update((blocks) => {
-					blocks.unshift(block);
-					return blocks;
+					const oldId = blocks.findIndex((b) => b.number === fullBlock.number);
+					if (oldId !== -1) {
+						blocks[oldId] = { ...fullBlock, rewards };
+						return blocks;
+					} else {
+						blocks.push({ ...fullBlock, rewards });
+						return blocks;
+					}
 				});
 			}
 		});
+
+		return () => {
+			stopWatching();
+		};
 	});
 </script>
 
 <Camera />
-
-<T.DirectionalLight intensity={0.8} position.x={5} position.y={10} />
-<T.AmbientLight intensity={0.2} />
-<ContactShadows scale={10} blur={1} far={2.5} opacity={0.5} />
-
 <Blocks blocks={$blocks} />

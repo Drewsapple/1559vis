@@ -4,7 +4,9 @@
 
 <div class="w-screen h-[100dvh] overflow-clip">
 	<h1>1559vis</h1>
-	<App />
+	<div class="aspect-square object-contain w-full h-full">
+		<App />
+	</div>
 </div>
 
 <style>
