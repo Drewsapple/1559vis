@@ -4,9 +4,9 @@
 	import { MOUSE, TOUCH } from 'three';
 </script>
 
-<T.PerspectiveCamera makeDefault position={[-5, 3, 2]} fov={35} let:ref={camera}>
+<T.PerspectiveCamera makeDefault position={[-5, 2.5, 2]} fov={35} let:ref={camera}>
 	<OrbitControls
-		enableZoom={false}
+		enableZoom={true}
 		enableRotate={true}
 		screenSpacePanning={false}
 		maxDistance={20}
@@ -19,11 +19,12 @@
 			ONE: TOUCH.PAN
 		}}
 		on:change={(e) => {
-			// camera.position.x = -5;
-			// camera.position.y = 3;
-			// e.target.target.x = 0;
-			// e.target.target.y = 0;
+			camera.position.x = -5;
+			camera.position.y = 2.5;
+			e.target.target.x = 0.25;
+			e.target.target.y = 1;
 		}}
+		target={[0.25, 1, 0]}
 		enableDamping
 	/>
 </T.PerspectiveCamera>

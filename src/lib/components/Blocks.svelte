@@ -9,11 +9,15 @@
 	const feeScalar = 1 / 100;
 </script>
 
-<T.Group position.y={0.25} position.z={0.75}>
+<T.Group position.y={0.25} position.z={1}>
 	<GasLegend {blocks} />
 	{#each blocks as block, i}
 		<T.Group position.z={-i * 1.5}>
-			<T.Mesh position.x={-(Number((block.gasUsed * 1000n) / block.gasLimit) / 1000) / 2}>
+			<T.Mesh
+				position.x={-Number((block.gasUsed * 1000n) / block.gasLimit) / 1000 / 2}
+				position.y={(feeScalar * parseFloat(formatUnits(block.baseFeePerGas ?? 0n, 9))) / 2}
+				position.z={-0.5}
+			>
 				<T.BoxGeometry
 					args={[
 						Number((block.gasUsed * 1000n) / block.gasLimit) / 1000,
@@ -24,6 +28,7 @@
 				<T.MeshStandardMaterial color="#0059BA" />
 			</T.Mesh>
 			<HTML
+				position.z={-0.5}
 				position.y={feeScalar * parseFloat(formatUnits(block.baseFeePerGas ?? 0n, 9)) + 0.5}
 				scale={0.25}
 				rotation={[0, -Math.PI / 2, 0]}
@@ -37,13 +42,13 @@
 						{new Date(Number((block.timestamp * 1000n).toString())).toLocaleString()}
 					</div>
 					<div class="text-sm text-center">
-						{formatUnits(block.gasUsed, 6)}M gas
+						{Number(formatUnits(block.gasUsed, 6)).toFixed(3)}M gas
 					</div>
 					<div class="text-sm text-center">
-						BaseFee: {formatUnits(block.baseFeePerGas ?? 0n, 9)} gwei
+						BaseFee: {Number(formatUnits(block.baseFeePerGas ?? 0n, 9)).toFixed(2)} gwei
 					</div>
 					<div class="text-sm text-center">
-						{formatEther((block.baseFeePerGas ?? 0n) * block.gasUsed)} ETH Burned
+						{Number(formatEther((block.baseFeePerGas ?? 0n) * block.gasUsed)).toPrecision(4)} ETH Burned
 					</div>
 				</div></HTML
 			>
